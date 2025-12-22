@@ -154,10 +154,12 @@ with tab2:
         if signal_type == "Step":
             x = np.ones(L)
         elif signal_type == "Ramp":
-            x = np.arange(L)
+            # x = np.arange(L)
+            x = np.arange(L, dtype=float) # Force float
         else:
             np.random.seed(42)
-            x = np.random.randint(0, 10, L)
+            # x = np.random.randint(0, 10, L)
+            x = np.random.randint(0, 10, L).astype(float) # Force float
             
         # --- Left Side: Downsample -> Filter ---
         x_down = x[::M]
