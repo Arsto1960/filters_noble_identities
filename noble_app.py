@@ -39,9 +39,9 @@ st.markdown("""
 
 st.markdown("### 🌊 Filter Design & Noble Identities")
 # st.title("🌊 Multirate Signal Processing & Filter Design")
-st.markdown("""
-Explore the core concepts of **FIR Filter Design**, **Noble Identities**, and **Polyphase Decomposition**.
-""")
+# st.markdown("""
+# Explore the core concepts of **FIR Filter Design**, **Noble Identities**, and **Polyphase Decomposition**.
+# """)
 
 # --- Create the Tabs ---
 tab1, tab2, tab3 = st.tabs([
