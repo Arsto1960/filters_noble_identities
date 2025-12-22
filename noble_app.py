@@ -37,7 +37,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-st.markdown("### 🌊 Multirate Signal Processing & Filter Design")
+st.markdown("### 🌊 Filter Design & Noble Identities")
 # st.title("🌊 Multirate Signal Processing & Filter Design")
 st.markdown("""
 Explore the core concepts of **FIR Filter Design**, **Noble Identities**, and **Polyphase Decomposition**.
@@ -132,9 +132,9 @@ with tab2:
     st.markdown(r"""
     Verify the identity: **$\downarrow N \circ H(z) \equiv H(z^N) \circ \downarrow N$**
     
-    *Left Side:* Downsample first, then filter.  
-    *Right Side:* Filter with upsampled $H(z^N)$ first, then downsample.
-    """)
+    # *Left Side:* Downsample first, then filter.  
+    # *Right Side:* Filter with upsampled $H(z^N)$ first, then downsample.
+    # """)
     
     col_n1, col_n2 = st.columns([1, 3])
     
@@ -178,12 +178,14 @@ with tab2:
         
         # Plot Left Result
         ax2[1].stem(y_left, basefmt=" ", linefmt='C0-', markerfmt='C0o', label="Left Side")
-        ax2[1].set_title(f"Left: Downsample by {M} → Filter H(z)", loc='left', fontsize=10, color='blue')
+        # ax2[1].set_title(f"Left: Downsample by {M} → Filter H(z)", loc='left', fontsize=10, color='blue')
+        ax2[1].set_title(f"Downsample by {M} → Filter H(z)", color='blue')
         
         # Plot Right Result
         # Add small offset to x-axis to see overlap if they match
         ax2[2].stem(y_right, basefmt=" ", linefmt='C1--', markerfmt='C1x', label="Right Side")
-        ax2[2].set_title(f"Right: Filter H(z^{M}) → Downsample by {M}", loc='left', fontsize=10, color='orange')
+        # ax2[2].set_title(f"Right: Filter H(z^{M}) → Downsample by {M}", loc='left', fontsize=10, color='orange')
+        ax2[2].set_title(f"Filter H(z^{M}) → Downsample by {M}", color='orange')
         
         for ax in ax2:
             ax.grid(True, alpha=0.2)
