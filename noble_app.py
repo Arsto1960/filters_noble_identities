@@ -177,20 +177,20 @@ with tab2:
         
         # Plot Input
         ax2[0].stem(x, basefmt=" ", linefmt='k-', label="Input x")
-        ax2[0].set_title("Input Signal", fontsize=10)
+        ax2[0].set_title("Input Signal")
         
         # Plot Left Result
         # ax2[1].stem(y_left, basefmt=" ", linefmt='C0-', markerfmt='C0o', label="Left Side")
         ax2[1].stem(y_left, basefmt=" ", linefmt='b-.', markerfmt='bo', label="Left Side")
         # ax2[1].set_title(f"Left: Downsample by {M} → Filter H(z)", loc='left', fontsize=10, color='blue')
-        ax2[1].set_title(f"Downsample by {M} → Filter H(z)", color='blue')
+        ax2[1].set_title(f"Downsample by {M} → Filter H(z)")
         
         # Plot Right Result
         # Add small offset to x-axis to see overlap if they match
         # ax2[2].stem(y_right, basefmt=" ", linefmt='C1--', markerfmt='C1x', label="Right Side")
         ax2[2].stem(y_right, basefmt=" ", linefmt='r--', markerfmt='rx', label="Right Side")
         # ax2[2].set_title(f"Right: Filter H(z^{M}) → Downsample by {M}", loc='left', fontsize=10, color='orange')
-        ax2[2].set_title(f"Filter H($z^{M}$) → Downsample by {M}", color='orange')
+        ax2[2].set_title(f"Filter H($z^{M}$) → Downsample by {M}")
         
         for ax in ax2:
             ax.grid(True, alpha=0.2)
