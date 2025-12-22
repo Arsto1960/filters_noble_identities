@@ -129,12 +129,15 @@ with tab1:
 # ==============================================================================
 with tab2:
     # st.header("2. Noble Identities (Verification)")
-    st.markdown(r"""
-    Verify the identity: **$\downarrow N \circ H(z) \equiv H(z^N) \circ \downarrow N$**
+    # st.markdown(r"""
+    # Verify the identity: **$\downarrow N \circ H(z) \equiv H(z^N) \circ \downarrow N$**
     
     # *Left Side:* Downsample first, then filter.  
     # *Right Side:* Filter with upsampled $H(z^N)$ first, then downsample.
     # """)
+    st.markdown(r"""
+    Verify the identity: **$\downarrow N \circ H(z) \equiv H(z^N) \circ \downarrow N$**
+    """)
     
     col_n1, col_n2 = st.columns([1, 3])
     
