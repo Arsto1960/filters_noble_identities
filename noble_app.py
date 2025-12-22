@@ -197,6 +197,8 @@ with tab2:
             ax.spines['top'].set_visible(False)
             ax.spines['right'].set_visible(False)
             
+        fig2.tight_layout()
+        fig2.subplots_adjust(hspace=0.5)
         st.pyplot(fig2)
         
         # Verification
