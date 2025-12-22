@@ -37,9 +37,10 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-st.title("🌊 Multirate Signal Processing & Filter Design")
+st.markdown("### 🌊 Multirate Signal Processing & Filter Design")
+# st.title("🌊 Multirate Signal Processing & Filter Design")
 st.markdown("""
-Explore the core concepts of **FIR Filter Design**, **Noble Identities**, and **Polyphase Decomposition** as defined in the "Filters & Noble Identities" lecture notes.
+Explore the core concepts of **FIR Filter Design**, **Noble Identities**, and **Polyphase Decomposition**.
 """)
 
 # --- Create the Tabs ---
@@ -53,13 +54,13 @@ tab1, tab2, tab3 = st.tabs([
 # TAB 1: FIR FILTER DESIGN (Remez/Parks-McLellan)
 # ==============================================================================
 with tab1:
-    st.header("1. Filter Design (Parks-McLellan)")
+    # st.header("1. Filter Design (Parks-McLellan)")
     st.markdown("Design optimal Equi-ripple FIR filters using the `remez` algorithm.")
     
     col1, col2 = st.columns([1, 3])
     
     with col1:
-        st.subheader("Specs")
+        # st.subheader("Specs")
         N = st.slider("Filter Order (N)", 8, 128, 32, step=2, help="Length of impulse response")
         
         # Band Edges (Normalized 0 to 0.5)
@@ -127,7 +128,7 @@ with tab1:
 # TAB 2: NOBLE IDENTITIES
 # ==============================================================================
 with tab2:
-    st.header("2. Noble Identities (Verification)")
+    # st.header("2. Noble Identities (Verification)")
     st.markdown(r"""
     Verify the identity: **$\downarrow N \circ H(z) \equiv H(z^N) \circ \downarrow N$**
     
@@ -201,7 +202,7 @@ with tab2:
 # TAB 3: POLYPHASE EFFICIENCY
 # ==============================================================================
 with tab3:
-    st.header("3. Polyphase Decomposition Efficiency")
+    # st.header("3. Polyphase Decomposition Efficiency")
     st.markdown("Visualize how a filter is split into $M$ polyphase components to save computation.")
     
     col_p1, col_p2 = st.columns([1, 2])
@@ -222,7 +223,8 @@ with tab3:
             components.append(sub_filter)
             
         # --- Visualize Components ---
-        st.subheader("Polyphase Components $H_i(z)$")
+        # st.subheader("Polyphase Components $H_i(z)$")
+        st.markdown("""Polyphase Components $H_i(z)$""")
         
         # We plot the original and color-code the components
         fig3, ax3 = plt.subplots(figsize=(10, 4))
@@ -246,7 +248,8 @@ with tab3:
         st.pyplot(fig3)
         
         # --- Cost Calculation ---
-        st.subheader("💡 Computational Cost Analysis")
+        # st.subheader("💡 Computational Cost Analysis")
+        st.markdown("""Computational Cost Analysis""")
         
         # Let's assume input signal length L_sig
         L_sig = 10000 
