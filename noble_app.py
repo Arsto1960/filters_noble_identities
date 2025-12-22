@@ -176,19 +176,21 @@ with tab2:
         fig2.patch.set_alpha(0)
         
         # Plot Input
-        ax2[0].stem(x, basefmt=" ", label="Input x")
+        ax2[0].stem(x, basefmt=" ", linefmt='k-', label="Input x")
         ax2[0].set_title("Input Signal", loc='left', fontsize=10)
         
         # Plot Left Result
-        ax2[1].stem(y_left, basefmt=" ", linefmt='C0-', markerfmt='C0o', label="Left Side")
+        # ax2[1].stem(y_left, basefmt=" ", linefmt='C0-', markerfmt='C0o', label="Left Side")
+        ax2[1].stem(y_left, basefmt=" ", linefmt='b-', markerfmt='C0o', label="Left Side")
         # ax2[1].set_title(f"Left: Downsample by {M} → Filter H(z)", loc='left', fontsize=10, color='blue')
         ax2[1].set_title(f"Downsample by {M} → Filter H(z)", color='blue')
         
         # Plot Right Result
         # Add small offset to x-axis to see overlap if they match
-        ax2[2].stem(y_right, basefmt=" ", linefmt='C1--', markerfmt='C1x', label="Right Side")
-        # ax2[2].set_title(f"Right: Filter H(z^{M}) → Downsample by {M}", loc='left', fontsize=10, color='orange')
-        ax2[2].set_title(f"Filter H(z^{M}) → Downsample by {M}", color='orange')
+        # ax2[2].stem(y_right, basefmt=" ", linefmt='C1--', markerfmt='C1x', label="Right Side")
+        ax2[2].stem(y_right, basefmt=" ", linefmt='r--', markerfmt='C1x', label="Right Side")
+        ax2[2].set_title(f"Right: Filter H(z^{M}) → Downsample by {M}", loc='left', fontsize=10, color='orange')
+        ax2[2].set_title(f"Filter H($z^{M}$) → Downsample by {M}", color='orange')
         
         for ax in ax2:
             ax.grid(True, alpha=0.2)
@@ -275,7 +277,13 @@ with tab3:
         c2.metric("Polyphase Ops", f"{int(ops_poly):,}")
         c3.metric("Speedup Factor", f"{M_poly}x", delta="Efficient!")
         
-        st.info("""
-        **Why is it faster?** Instead of calculating convolution for *every* sample and then throwing away $M-1$ of them (Direct Downsampling), 
-        we only calculate the convolution for the samples we actually keep!
-        """)
+        # st.info("""
+        # **Why is it faster?** Instead of calculating convolution for *every* sample and then throwing away $M-1$ of them (Direct Downsampling), 
+        # we only calculate the convolution for the samples we actually keep!
+        # """)
+
+        # --- Educational Expander ---
+        with st.expander("🚀 Why is it faster?"):
+            st.markdown(r"""Instead of calculating convolution for *every* sample and then throwing away $M-1$ of them (Direct Downsampling), 
+            we only calculate the convolution for the samples we actually keep!
+            """)
