@@ -216,230 +216,230 @@ with tab2:
             st.error("❌ Mismatch found (check boundary conditions).")
 
 
-# ==============================================================================
-# TAB 3: POLYPHASE EFFICIENCY & COMMUTATOR ANIMATION
-# ==============================================================================
-with tab3:
-    st.header("3. Polyphase Decomposition Efficiency")
-    st.markdown("Visualize how a filter is split into $M$ polyphase components and how the **Commutator** distributes samples.")
+# # ==============================================================================
+# # TAB 3: POLYPHASE EFFICIENCY & COMMUTATOR ANIMATION
+# # ==============================================================================
+# with tab3:
+#     st.header("3. Polyphase Decomposition Efficiency")
+#     st.markdown("Visualize how a filter is split into $M$ polyphase components and how the **Commutator** distributes samples.")
     
-    # --- Settings ---
-    col_p1, col_p2 = st.columns([1, 2])
-    with col_p1:
-        M_poly = st.slider("Decimation Factor M", 2, 5, 3)
-        animation_speed = st.slider("Animation Speed (s)", 0.1, 2.0, 0.8)
+#     # --- Settings ---
+#     col_p1, col_p2 = st.columns([1, 2])
+#     with col_p1:
+#         M_poly = st.slider("Decimation Factor M", 2, 5, 3)
+#         animation_speed = st.slider("Animation Speed (s)", 0.1, 2.0, 0.8)
     
-    with col_p2:
-        st.info("The **Commutator** acts as a rotating switch, distributing consecutive samples $x[n]$ to different sub-filters $H_i(z)$. This reduces the data rate *before* processing.")
+#     with col_p2:
+#         st.info("The **Commutator** acts as a rotating switch, distributing consecutive samples $x[n]$ to different sub-filters $H_i(z)$. This reduces the data rate *before* processing.")
 
-    st.divider()
+#     st.divider()
     
-    # --- ANIMATION SECTION ---
-    st.subheader("🎬 Commutator Animation")
+#     # --- ANIMATION SECTION ---
+#     st.subheader("🎬 Commutator Animation")
     
-    if st.button("▶️ Start Commutator Animation"):
-        # Placeholder for the animation frame
-        anim_placeholder = st.empty()
+#     if st.button("▶️ Start Commutator Animation"):
+#         # Placeholder for the animation frame
+#         anim_placeholder = st.empty()
         
-        # Simulation Parameters
-        num_samples = 12
-        input_signal = np.arange(num_samples) + 1  # Samples 1, 2, 3...
+#         # Simulation Parameters
+#         num_samples = 12
+#         input_signal = np.arange(num_samples) + 1  # Samples 1, 2, 3...
         
-        # Buffers to hold samples for each branch
-        branches = [[] for _ in range(M_poly)]
+#         # Buffers to hold samples for each branch
+#         branches = [[] for _ in range(M_poly)]
         
-        import time
+#         import time
         
-        # Animation Loop
-        for n in range(num_samples):
-            current_val = input_signal[n]
-            # Determine which branch gets the sample (Cyclic / Commutator)
-            # Typically x[0]->H0, x[1]->H1... (Serial to Parallel)
-            branch_idx = n % M_poly
+#         # Animation Loop
+#         for n in range(num_samples):
+#             current_val = input_signal[n]
+#             # Determine which branch gets the sample (Cyclic / Commutator)
+#             # Typically x[0]->H0, x[1]->H1... (Serial to Parallel)
+#             branch_idx = n % M_poly
             
-            # Add to logical buffer
-            branches[branch_idx].append(current_val)
+#             # Add to logical buffer
+#             branches[branch_idx].append(current_val)
             
-            # --- DRAWING ---
-            fig, ax = plt.subplots(figsize=(10, 6))
+#             # --- DRAWING ---
+#             fig, ax = plt.subplots(figsize=(10, 6))
             
-            # 1. Draw The "Switch" (Center)
-            # Coordinates
-            center_x, center_y = 0, 0
-            radius = 2
+#             # 1. Draw The "Switch" (Center)
+#             # Coordinates
+#             center_x, center_y = 0, 0
+#             radius = 2
             
-            # Draw Input Stream (Left side)
-            ax.text(-3, 0, f"Input x[{n}] = {current_val}", fontsize=14, ha='right', va='center', fontweight='bold')
-            ax.arrow(-2.8, 0, 1.8, 0, head_width=0.2, head_length=0.2, fc='k', ec='k')
+#             # Draw Input Stream (Left side)
+#             ax.text(-3, 0, f"Input x[{n}] = {current_val}", fontsize=14, ha='right', va='center', fontweight='bold')
+#             ax.arrow(-2.8, 0, 1.8, 0, head_width=0.2, head_length=0.2, fc='k', ec='k')
             
-            # Draw Branches (Right side, arranged in semi-circle)
-            # Angles for branches (spread out on the right)
-            angles = np.linspace(np.pi/2, -np.pi/2, M_poly + 2)[1:-1]
+#             # Draw Branches (Right side, arranged in semi-circle)
+#             # Angles for branches (spread out on the right)
+#             angles = np.linspace(np.pi/2, -np.pi/2, M_poly + 2)[1:-1]
             
-            for i, angle in enumerate(angles):
-                # Branch coordinates
-                bx = center_x + radius * np.cos(angle)
-                by = center_y + radius * np.sin(angle)
+#             for i, angle in enumerate(angles):
+#                 # Branch coordinates
+#                 bx = center_x + radius * np.cos(angle)
+#                 by = center_y + radius * np.sin(angle)
                 
-                # Draw Branch Line
-                color = 'red' if i == branch_idx else 'gray'
-                width = 3 if i == branch_idx else 1
-                alpha = 1.0 if i == branch_idx else 0.3
+#                 # Draw Branch Line
+#                 color = 'red' if i == branch_idx else 'gray'
+#                 width = 3 if i == branch_idx else 1
+#                 alpha = 1.0 if i == branch_idx else 0.3
                 
-                # Draw Line from center to branch
-                ax.plot([center_x, bx], [center_y, by], color=color, linewidth=width, alpha=alpha)
+#                 # Draw Line from center to branch
+#                 ax.plot([center_x, bx], [center_y, by], color=color, linewidth=width, alpha=alpha)
                 
-                # Label Branch
-                ax.text(bx + 0.5, by, f"Branch {i}\n($H_{i}$)", fontsize=12, ha='left', va='center', color='blue')
+#                 # Label Branch
+#                 ax.text(bx + 0.5, by, f"Branch {i}\n($H_{i}$)", fontsize=12, ha='left', va='center', color='blue')
                 
-                # Draw "Bucket" / Buffer for this branch
-                # We visualize the collected samples as a list growing to the right
-                collected = branches[i]
-                for j, val in enumerate(collected):
-                    # Draw small box for sample
-                    sample_x = bx + 1.5 + (j * 0.8)
-                    sample_y = by
+#                 # Draw "Bucket" / Buffer for this branch
+#                 # We visualize the collected samples as a list growing to the right
+#                 collected = branches[i]
+#                 for j, val in enumerate(collected):
+#                     # Draw small box for sample
+#                     sample_x = bx + 1.5 + (j * 0.8)
+#                     sample_y = by
                     
-                    # Highlight the NEWEST sample if it's this branch
-                    if i == branch_idx and j == len(collected) - 1:
-                        box_color = '#ff9999' # Highlight
-                        edge_color = 'red'
-                    else:
-                        box_color = '#e0e0e0'
-                        edge_color = 'gray'
+#                     # Highlight the NEWEST sample if it's this branch
+#                     if i == branch_idx and j == len(collected) - 1:
+#                         box_color = '#ff9999' # Highlight
+#                         edge_color = 'red'
+#                     else:
+#                         box_color = '#e0e0e0'
+#                         edge_color = 'gray'
                         
-                    circle = plt.Circle((sample_x, sample_y), 0.3, facecolor=box_color, edgecolor=edge_color)
-                    ax.add_patch(circle)
-                    ax.text(sample_x, sample_y, str(int(val)), ha='center', va='center', fontsize=9)
+#                     circle = plt.Circle((sample_x, sample_y), 0.3, facecolor=box_color, edgecolor=edge_color)
+#                     ax.add_patch(circle)
+#                     ax.text(sample_x, sample_y, str(int(val)), ha='center', va='center', fontsize=9)
 
-            # Draw the "Switch Arm" Arrow
-            # Calculate exact angle for current branch
-            target_angle = angles[branch_idx]
-            arrow_x = center_x + (radius - 0.2) * np.cos(target_angle)
-            arrow_y = center_y + (radius - 0.2) * np.sin(target_angle)
+#             # Draw the "Switch Arm" Arrow
+#             # Calculate exact angle for current branch
+#             target_angle = angles[branch_idx]
+#             arrow_x = center_x + (radius - 0.2) * np.cos(target_angle)
+#             arrow_y = center_y + (radius - 0.2) * np.sin(target_angle)
             
-            ax.arrow(center_x, center_y, arrow_x, arrow_y, head_width=0.15, head_length=0.2, fc='k', ec='k', zorder=10)
-            ax.scatter([0], [0], c='black', s=100, zorder=10) # Pivot point
+#             ax.arrow(center_x, center_y, arrow_x, arrow_y, head_width=0.15, head_length=0.2, fc='k', ec='k', zorder=10)
+#             ax.scatter([0], [0], c='black', s=100, zorder=10) # Pivot point
             
-            # Styling
-            ax.set_xlim(-4, 8)
-            ax.set_ylim(-3, 3)
-            ax.set_aspect('equal')
-            ax.axis('off')
-            ax.set_title(f"Step {n}: Distributing Sample x[{n}] to Branch {branch_idx}", fontsize=16)
+#             # Styling
+#             ax.set_xlim(-4, 8)
+#             ax.set_ylim(-3, 3)
+#             ax.set_aspect('equal')
+#             ax.axis('off')
+#             ax.set_title(f"Step {n}: Distributing Sample x[{n}] to Branch {branch_idx}", fontsize=16)
             
-            # Update plot in Streamlit
-            anim_placeholder.pyplot(fig)
-            plt.close(fig) # Prevent memory leak
+#             # Update plot in Streamlit
+#             anim_placeholder.pyplot(fig)
+#             plt.close(fig) # Prevent memory leak
             
-            time.sleep(animation_speed)
+#             time.sleep(animation_speed)
             
-        st.success("Animation Complete! Observe how samples are decimated into parallel streams.")
+#         st.success("Animation Complete! Observe how samples are decimated into parallel streams.")
 
-    st.divider()
+#     st.divider()
     
-    # --- STATIC EXPLANATION & COST ---
-    # (Optional: Keep the static cost analysis below if desired)
-    st.subheader("💡 Computational Cost Analysis")
+#     # --- STATIC EXPLANATION & COST ---
+#     # (Optional: Keep the static cost analysis below if desired)
+#     st.subheader("💡 Computational Cost Analysis")
     
-    # Let's assume input signal length L_sig
-    L_sig = 10000 
-    N_poly = 32
-    ops_direct = L_sig * N_poly
-    ops_poly = ops_direct / M_poly
+#     # Let's assume input signal length L_sig
+#     L_sig = 10000 
+#     N_poly = 32
+#     ops_direct = L_sig * N_poly
+#     ops_poly = ops_direct / M_poly
     
-    c1, c2, c3 = st.columns(3)
-    c1.metric("Direct Ops", f"{ops_direct:,}")
-    c2.metric("Polyphase Ops", f"{int(ops_poly):,}")
-    c3.metric("Speedup Factor", f"{M_poly}x", delta="Efficient!")
+#     c1, c2, c3 = st.columns(3)
+#     c1.metric("Direct Ops", f"{ops_direct:,}")
+#     c2.metric("Polyphase Ops", f"{int(ops_poly):,}")
+#     c3.metric("Speedup Factor", f"{M_poly}x", delta="Efficient!")
     
-    st.info("""
-    **Why is this efficient?** By splitting the stream *before* filtering (using the Noble Identities), each sub-filter $H_i(z)$ runs at a rate of $f_s/M$. 
-    We perform $M$ filters in parallel, but each runs $M$ times slower!
-    """)
+#     st.info("""
+#     **Why is this efficient?** By splitting the stream *before* filtering (using the Noble Identities), each sub-filter $H_i(z)$ runs at a rate of $f_s/M$. 
+#     We perform $M$ filters in parallel, but each runs $M$ times slower!
+#     """)
 
 
 # ==============================================================================
 # TAB 3: POLYPHASE EFFICIENCY
 # ==============================================================================
-# with tab3:
-#     # st.header("3. Polyphase Decomposition Efficiency")
-#     st.markdown("Visualize how a filter is split into $M$ polyphase components to save computation.")
-#     with st.container(border=True):
-#         col_p1, col_p2 = st.columns(2)
-#         with col_p1:
-#             M_poly = st.slider("Decimation Factor M", 2, 8, 4)
-#         with col_p2:
-#             N_poly = st.slider("Filter Length (Taps)", 16, 128, 32, step=M_poly)
+with tab3:
+    # st.header("3. Polyphase Decomposition Efficiency")
+    st.markdown("Visualize how a filter is split into $M$ polyphase components to save computation.")
+    with st.container(border=True):
+        col_p1, col_p2 = st.columns(2)
+        with col_p1:
+            M_poly = st.slider("Decimation Factor M", 2, 8, 4)
+        with col_p2:
+            N_poly = st.slider("Filter Length (Taps)", 16, 128, 32, step=M_poly)
             
     
-#     # col_p1, col_p2 = st.columns([1, 2])
+    # col_p1, col_p2 = st.columns([1, 2])
     
-#     # with col_p1:
-#     #     M_poly = st.slider("Decimation Factor M", 2, 8, 4)
-#     #     N_poly = st.slider("Filter Length (Taps)", 16, 128, 32, step=M_poly)
+    # with col_p1:
+    #     M_poly = st.slider("Decimation Factor M", 2, 8, 4)
+    #     N_poly = st.slider("Filter Length (Taps)", 16, 128, 32, step=M_poly)
         
-#     # with col_p2:
-#     # Create a dummy filter
-#     h_poly = np.arange(N_poly) + 1 # 1, 2, 3...
+    # with col_p2:
+    # Create a dummy filter
+    h_poly = np.arange(N_poly) + 1 # 1, 2, 3...
         
-#     # Decompose
-#     components = []
-#     for i in range(M_poly):
-#         # Take every Mth sample starting at i
-#         sub_filter = h_poly[i::M_poly]
-#         components.append(sub_filter)
+    # Decompose
+    components = []
+    for i in range(M_poly):
+        # Take every Mth sample starting at i
+        sub_filter = h_poly[i::M_poly]
+        components.append(sub_filter)
             
-#     # --- Visualize Components ---
-#     # st.subheader("Polyphase Components $H_i(z)$")
-#     st.markdown("""Polyphase Components $H_i(z)$""")
+    # --- Visualize Components ---
+    # st.subheader("Polyphase Components $H_i(z)$")
+    st.markdown("""Polyphase Components $H_i(z)$""")
         
-#     # We plot the original and color-code the components
-#     fig3, ax3 = plt.subplots(figsize=(10, 4))
-#     fig3.patch.set_alpha(0)
+    # We plot the original and color-code the components
+    fig3, ax3 = plt.subplots(figsize=(10, 4))
+    fig3.patch.set_alpha(0)
         
-#     # Plot original in gray shadow
-#     ax3.stem(h_poly, linefmt='gray', markerfmt='k.', basefmt=" ", label="Original H(z)")
+    # Plot original in gray shadow
+    ax3.stem(h_poly, linefmt='gray', markerfmt='k.', basefmt=" ", label="Original H(z)")
         
-#     # Plot first 2 components colored to show the pattern
-#     # Component 0
-#     idx0 = np.arange(0, N_poly, M_poly)
-#     ax3.stem(idx0, h_poly[idx0], linefmt='r-', markerfmt='ro', basefmt=" ", label=f"H0 (Phase 0)")
+    # Plot first 2 components colored to show the pattern
+    # Component 0
+    idx0 = np.arange(0, N_poly, M_poly)
+    ax3.stem(idx0, h_poly[idx0], linefmt='r-', markerfmt='ro', basefmt=" ", label=f"H0 (Phase 0)")
         
-#     # Component 1
-#     idx1 = np.arange(1, N_poly, M_poly)
-#     ax3.stem(idx1, h_poly[idx1], linefmt='b-', markerfmt='bx', basefmt=" ", label=f"H1 (Phase 1)")
+    # Component 1
+    idx1 = np.arange(1, N_poly, M_poly)
+    ax3.stem(idx1, h_poly[idx1], linefmt='b-', markerfmt='bx', basefmt=" ", label=f"H1 (Phase 1)")
         
-#     ax3.set_title(f"Decomposing H(z) (Length {N_poly}) into {M_poly} Filters", loc='left')
-#     ax3.legend()
-#     ax3.grid(True, alpha=0.2)
-#     st.pyplot(fig3)
+    ax3.set_title(f"Decomposing H(z) (Length {N_poly}) into {M_poly} Filters", loc='left')
+    ax3.legend()
+    ax3.grid(True, alpha=0.2)
+    st.pyplot(fig3)
         
-#     # --- Cost Calculation ---
-#     # st.subheader("💡 Computational Cost Analysis")
-#     st.markdown("""📈 Computational Cost Analysis""")
+    # --- Cost Calculation ---
+    # st.subheader("💡 Computational Cost Analysis")
+    st.markdown("""📈 Computational Cost Analysis""")
         
-#     # Let's assume input signal length L_sig
-#     L_sig = 10000 
+    # Let's assume input signal length L_sig
+    L_sig = 10000 
         
-#     # Direct: Filter (L_sig * N_poly) then drop M-1 samples
-#     ops_direct = L_sig * N_poly
+    # Direct: Filter (L_sig * N_poly) then drop M-1 samples
+    ops_direct = L_sig * N_poly
         
-#     # Polyphase: Commutator splits signal (no cost) -> M filters run at L_sig/M rate
-#     # Length of sub-filters is N_poly/M
-#     # Each sub-filter processes (L_sig/M) samples
-#     # Ops per sub-filter = (L_sig/M) * (N_poly/M)
-#     # Total ops = M * [(L_sig/M) * (N_poly/M)] = (L_sig * N_poly) / M
+    # Polyphase: Commutator splits signal (no cost) -> M filters run at L_sig/M rate
+    # Length of sub-filters is N_poly/M
+    # Each sub-filter processes (L_sig/M) samples
+    # Ops per sub-filter = (L_sig/M) * (N_poly/M)
+    # Total ops = M * [(L_sig/M) * (N_poly/M)] = (L_sig * N_poly) / M
         
-#     ops_poly = ops_direct / M_poly
+    ops_poly = ops_direct / M_poly
         
-#     c1, c2, c3 = st.columns(3)
-#     c1.metric("Direct Ops", f"{ops_direct:,}")
-#     c2.metric("Polyphase Ops", f"{int(ops_poly):,}")
-#     c3.metric("Speedup Factor", f"{M_poly}x", delta="Efficient!")
+    c1, c2, c3 = st.columns(3)
+    c1.metric("Direct Ops", f"{ops_direct:,}")
+    c2.metric("Polyphase Ops", f"{int(ops_poly):,}")
+    c3.metric("Speedup Factor", f"{M_poly}x", delta="Efficient!")
         
-#     # --- Educational Expander ---
-#     with st.expander("🚀 Why is it faster?"):
-#         st.markdown(r"""Instead of calculating convolution for *every* sample and then throwing away $M-1$ of them (Direct Downsampling), 
-#         we only calculate the convolution for the samples we actually keep!
-#         """)
+    # --- Educational Expander ---
+    with st.expander("🚀 Why is it faster?"):
+        st.markdown(r"""Instead of calculating convolution for *every* sample and then throwing away $M-1$ of them (Direct Downsampling), 
+        we only calculate the convolution for the samples we actually keep!
+        """)
