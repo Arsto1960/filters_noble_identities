@@ -23,7 +23,7 @@ st.markdown("""
     .stTabs [data-baseweb="tab"] {
         height: 50px;
         white-space: pre-wrap;
-        background-color: #bdc6f2;
+        background-color: #edf2fc;
         border-radius: 4px 4px 0px 0px;
         gap: 1px;
         padding-top: 10px;
