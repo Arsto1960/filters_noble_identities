@@ -23,11 +23,11 @@ st.markdown("""
     .stTabs [data-baseweb="tab"] {
         height: 50px;
         white-space: pre-wrap;
-        background-color: #ccdcfc;
+        background-color: #d5dcde;
         border-radius: 4px 4px 0px 0px;
-        gap: 1px;
-        padding-top: 10px;
-        padding-bottom: 10px;
+		gap: 1px;
+		padding-top: 10px;
+		padding-bottom: 10px;
     }
     .stTabs [aria-selected="true"] {
         background-color: #ffffff;
