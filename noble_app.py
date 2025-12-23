@@ -13,6 +13,12 @@ st.set_page_config(
 # --- CSS for Professional Styling ---
 st.markdown("""
 <style>
+    .block-container {
+                padding-top: 1rem;
+                padding-bottom: 0rem;
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
     .stTabs [data-baseweb="tab-list"] { gap: 24px; }
     .stTabs [data-baseweb="tab"] {
         height: 50px;
@@ -215,79 +221,81 @@ with tab2:
 with tab3:
     # st.header("3. Polyphase Decomposition Efficiency")
     st.markdown("Visualize how a filter is split into $M$ polyphase components to save computation.")
-    
-    col_p1, col_p2 = st.columns([1, 2])
-    
-    with col_p1:
-        M_poly = st.slider("Decimation Factor M", 2, 8, 4)
-        N_poly = st.slider("Filter Length (Taps)", 16, 128, 32, step=M_poly)
-        
-    with col_p2:
-        # Create a dummy filter
-        h_poly = np.arange(N_poly) + 1 # 1, 2, 3...
-        
-        # Decompose
-        components = []
-        for i in range(M_poly):
-            # Take every Mth sample starting at i
-            sub_filter = h_poly[i::M_poly]
-            components.append(sub_filter)
+    with st.container(border=True):
+        col_p1, col_p2 = st.columns(2)
+        with col_p1:
+            M_poly = st.slider("Decimation Factor M", 2, 8, 4)
+        with col_p2:
+            N_poly = st.slider("Filter Length (Taps)", 16, 128, 32, step=M_poly)
             
-        # --- Visualize Components ---
-        # st.subheader("Polyphase Components $H_i(z)$")
-        st.markdown("""Polyphase Components $H_i(z)$""")
+    
+    # col_p1, col_p2 = st.columns([1, 2])
+    
+    # with col_p1:
+    #     M_poly = st.slider("Decimation Factor M", 2, 8, 4)
+    #     N_poly = st.slider("Filter Length (Taps)", 16, 128, 32, step=M_poly)
         
-        # We plot the original and color-code the components
-        fig3, ax3 = plt.subplots(figsize=(10, 4))
-        fig3.patch.set_alpha(0)
+    # with col_p2:
+    # Create a dummy filter
+    h_poly = np.arange(N_poly) + 1 # 1, 2, 3...
         
-        # Plot original in gray shadow
-        ax3.stem(h_poly, linefmt='gray', markerfmt='k.', basefmt=" ", label="Original H(z)")
+    # Decompose
+    components = []
+    for i in range(M_poly):
+        # Take every Mth sample starting at i
+        sub_filter = h_poly[i::M_poly]
+        components.append(sub_filter)
+            
+    # --- Visualize Components ---
+    # st.subheader("Polyphase Components $H_i(z)$")
+    st.markdown("""Polyphase Components $H_i(z)$""")
         
-        # Plot first 2 components colored to show the pattern
-        # Component 0
-        idx0 = np.arange(0, N_poly, M_poly)
-        ax3.stem(idx0, h_poly[idx0], linefmt='r-', markerfmt='ro', basefmt=" ", label=f"H0 (Phase 0)")
+    # We plot the original and color-code the components
+    fig3, ax3 = plt.subplots(figsize=(10, 4))
+    fig3.patch.set_alpha(0)
         
-        # Component 1
-        idx1 = np.arange(1, N_poly, M_poly)
-        ax3.stem(idx1, h_poly[idx1], linefmt='b-', markerfmt='bx', basefmt=" ", label=f"H1 (Phase 1)")
+    # Plot original in gray shadow
+    ax3.stem(h_poly, linefmt='gray', markerfmt='k.', basefmt=" ", label="Original H(z)")
         
-        ax3.set_title(f"Decomposing H(z) (Length {N_poly}) into {M_poly} Filters", loc='left')
-        ax3.legend()
-        ax3.grid(True, alpha=0.2)
-        st.pyplot(fig3)
+    # Plot first 2 components colored to show the pattern
+    # Component 0
+    idx0 = np.arange(0, N_poly, M_poly)
+    ax3.stem(idx0, h_poly[idx0], linefmt='r-', markerfmt='ro', basefmt=" ", label=f"H0 (Phase 0)")
         
-        # --- Cost Calculation ---
-        # st.subheader("💡 Computational Cost Analysis")
-        st.markdown("""Computational Cost Analysis""")
+    # Component 1
+    idx1 = np.arange(1, N_poly, M_poly)
+    ax3.stem(idx1, h_poly[idx1], linefmt='b-', markerfmt='bx', basefmt=" ", label=f"H1 (Phase 1)")
         
-        # Let's assume input signal length L_sig
-        L_sig = 10000 
+    ax3.set_title(f"Decomposing H(z) (Length {N_poly}) into {M_poly} Filters", loc='left')
+    ax3.legend()
+    ax3.grid(True, alpha=0.2)
+    st.pyplot(fig3)
         
-        # Direct: Filter (L_sig * N_poly) then drop M-1 samples
-        ops_direct = L_sig * N_poly
+    # --- Cost Calculation ---
+    # st.subheader("💡 Computational Cost Analysis")
+    st.markdown("""📈 Computational Cost Analysis""")
         
-        # Polyphase: Commutator splits signal (no cost) -> M filters run at L_sig/M rate
-        # Length of sub-filters is N_poly/M
-        # Each sub-filter processes (L_sig/M) samples
-        # Ops per sub-filter = (L_sig/M) * (N_poly/M)
-        # Total ops = M * [(L_sig/M) * (N_poly/M)] = (L_sig * N_poly) / M
+    # Let's assume input signal length L_sig
+    L_sig = 10000 
         
-        ops_poly = ops_direct / M_poly
+    # Direct: Filter (L_sig * N_poly) then drop M-1 samples
+    ops_direct = L_sig * N_poly
         
-        c1, c2, c3 = st.columns(3)
-        c1.metric("Direct Ops", f"{ops_direct:,}")
-        c2.metric("Polyphase Ops", f"{int(ops_poly):,}")
-        c3.metric("Speedup Factor", f"{M_poly}x", delta="Efficient!")
+    # Polyphase: Commutator splits signal (no cost) -> M filters run at L_sig/M rate
+    # Length of sub-filters is N_poly/M
+    # Each sub-filter processes (L_sig/M) samples
+    # Ops per sub-filter = (L_sig/M) * (N_poly/M)
+    # Total ops = M * [(L_sig/M) * (N_poly/M)] = (L_sig * N_poly) / M
         
-        # st.info("""
-        # **Why is it faster?** Instead of calculating convolution for *every* sample and then throwing away $M-1$ of them (Direct Downsampling), 
-        # we only calculate the convolution for the samples we actually keep!
-        # """)
-
-        # --- Educational Expander ---
-        with st.expander("🚀 Why is it faster?"):
-            st.markdown(r"""Instead of calculating convolution for *every* sample and then throwing away $M-1$ of them (Direct Downsampling), 
-            we only calculate the convolution for the samples we actually keep!
-            """)
+    ops_poly = ops_direct / M_poly
+        
+    c1, c2, c3 = st.columns(3)
+    c1.metric("Direct Ops", f"{ops_direct:,}")
+    c2.metric("Polyphase Ops", f"{int(ops_poly):,}")
+    c3.metric("Speedup Factor", f"{M_poly}x", delta="Efficient!")
+        
+    # --- Educational Expander ---
+    with st.expander("🚀 Why is it faster?"):
+        st.markdown(r"""Instead of calculating convolution for *every* sample and then throwing away $M-1$ of them (Direct Downsampling), 
+        we only calculate the convolution for the samples we actually keep!
+        """)
